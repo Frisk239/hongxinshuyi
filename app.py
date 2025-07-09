@@ -3,6 +3,7 @@ import sqlite3
 import os
 from openai import OpenAI
 app = Flask(__name__)
+app.secret_key = 'your-secret-key-here'  # 生产环境应使用更安全的随机字符串
 
 # 初始化数据库
 from database import get_db, init_app
@@ -56,6 +57,32 @@ def register():
 def logout():
     session.clear()
     return redirect(url_for('index'))
+
+@app.route('/user-center')
+def user_center():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    db = get_db()
+    # 获取用户答题记录
+    records = db.execute('''
+        SELECT q.question_text, ar.user_answer, ar.is_correct 
+        FROM answer_records ar
+        JOIN questions q ON ar.question_id = q.id
+        WHERE ar.user_id = ?
+        ORDER BY ar.timestamp DESC
+    ''', (session['user_id'],)).fetchall()
+    
+    # 获取错题本
+    wrong_answers = db.execute('''
+        SELECT q.question_text, q.correct_answer, ar.user_answer
+        FROM answer_records ar
+        JOIN questions q ON ar.question_id = q.id
+        WHERE ar.user_id = ? AND ar.is_correct = 0
+        ORDER BY ar.timestamp DESC
+    ''', (session['user_id'],)).fetchall()
+    
+    return render_template('user_center.html', records=records, wrong_answers=wrong_answers)
 
 # 题库相关路由
 @app.route('/')

@@ -32,7 +32,7 @@
                 <img src="{{ url_for('static', filename=hero.image) }}" alt="{{ hero.name }}">
                 <h3>{{ hero.name }}</h3>
                 <p>{{ hero.description }}</p>
-<a href="{{ url_for('mao' if hero.id == 1 else 'deng' if hero.id == 2 else 'zhou' if hero.id == 3 else 'zhu') }}">了解更多</a>
+<a class="learn-more-btn" href="{{ url_for('mao' if hero.id == 1 else 'deng' if hero.id == 2 else 'zhou' if hero.id == 3 else 'zhu') }}">了解更多</a>
             </div>
             {% endfor %}
         </div>

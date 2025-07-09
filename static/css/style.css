@@ -9,14 +9,15 @@ body {
 
 /* 导航栏样式 */
 .navbar {
-    background-color: #c12c2c;
+    background: linear-gradient(135deg, #c12c2c 0%, #8a1f1f 100%);
     color: white;
-    padding: 15px 20px;
+    padding: 15px 5%;
     display: flex;
     align-items: center;
     justify-content: space-between;
     position: relative;
     z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 .logo {
@@ -33,13 +34,32 @@ body {
 .nav-item {
     color: white;
     text-decoration: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    transition: background-color 0.3s;
+    padding: 8px 15px;
+    border-radius: 20px;
+    transition: all 0.3s;
+    font-weight: 500;
+    position: relative;
 }
 
 .nav-item:hover {
-    background-color: #a02020;
+    background-color: rgba(255,255,255,0.2);
+    transform: translateY(-2px);
+}
+
+.nav-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: white;
+    transition: all 0.3s;
+    transform: translateX(-50%);
+}
+
+.nav-item:hover::after {
+    width: 60%;
 }
 
 .search-box {
@@ -65,9 +85,11 @@ body {
 
 .user-avatar {
     width: 40px;
+    min-width: 40px;
     height: 40px;
     border-radius: 50%;
     overflow: hidden;
+    flex-shrink: 0;
 }
 
 #avatar-img {
@@ -132,15 +154,28 @@ body {
 }
 
 .hero-card {
-    background-color: #fff9f9;
-    border-radius: 8px;
-    padding: 15px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s;
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s;
+    overflow: hidden;
+    position: relative;
 }
 
 .hero-card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.hero-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, #c12c2c, #e67e7e);
 }
 
 .hero-card img {
@@ -209,19 +244,58 @@ body {
     background-color: #f0f0f0;
 }
 
-.submit-btn {
+.submit-btn, .learn-more-btn {
     background-color: #c12c2c;
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
+    padding: 12px 24px;
+    border-radius: 30px;
     cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.3s;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(193, 44, 44, 0.3);
 }
 
-.submit-btn:hover {
+.submit-btn:hover, .learn-more-btn:hover {
     background-color: #a02020;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(193, 44, 44, 0.4);
+}
+
+.submit-btn:active, .learn-more-btn:active {
+    transform: translateY(0);
+}
+
+.submit-btn::after, .learn-more-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%);
+    transform-origin: 50% 50%;
+}
+
+.submit-btn:focus:not(:active)::after, 
+.learn-more-btn:focus:not(:active)::after {
+    animation: ripple 1s ease-out;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(20, 20);
+        opacity: 0;
+    }
 }
 
 /* 模态框样式 */
