@@ -18,9 +18,10 @@
         <div class="stats-card">
             <h3>答题记录</h3>
             <div class="stats-content">
+                <a href="{{ url_for('answer_history') }}" class="view-all-btn">查看全部答题记录</a>
                 {% if records %}
                 <ul class="answer-records">
-                    {% for record in records %}
+                    {% for record in records[:5] %}
                     <li>
                         <span class="question-text">{{ record.question_text }}</span>
                         <span class="result-badge {% if record.is_correct %}correct{% else %}wrong{% endif %}">
@@ -38,9 +39,10 @@
         <div class="stats-card">
             <h3>错题本</h3>
             <div class="stats-content">
+                <a href="{{ url_for('wrong_questions') }}" class="view-all-btn">查看全部错题</a>
                 {% if wrong_answers %}
                 <ul class="wrong-answers">
-                    {% for answer in wrong_answers %}
+                    {% for answer in wrong_answers[:5] %}
                     <li>
                         <p class="question">{{ answer.question_text }}</p>
                         <p class="user-answer">你的答案: {{ answer.user_answer }}</p>
@@ -154,6 +156,21 @@
 
 .correct-answer {
     color: #4CAF50;
+}
+
+.view-all-btn {
+    display: inline-block;
+    margin-bottom: 15px;
+    padding: 5px 10px;
+    background-color: #c12c2c;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.view-all-btn:hover {
+    background-color: #a02020;
 }
 </style>
 {% endblock %}

@@ -86,6 +86,40 @@ def user_center():
     
     return render_template('user_center.html', records=records, wrong_answers=wrong_answers)
 
+@app.route('/answer-history')
+def answer_history():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    db = get_db()
+    records = db.execute('''
+        SELECT ar.id, q.question_text, q.option_a, q.option_b, q.option_c, q.option_d, 
+               ar.user_answer, q.correct_answer, ar.is_correct
+        FROM answer_records ar
+        JOIN questions q ON ar.question_id = q.id
+        WHERE ar.user_id = ?
+        ORDER BY ar.id DESC
+    ''', (session['user_id'],)).fetchall()
+    
+    return render_template('answer_history.html', records=records)
+
+@app.route('/wrong-questions')
+def wrong_questions():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    db = get_db()
+    wrong_answers = db.execute('''
+        SELECT q.id, q.question_text, q.option_a, q.option_b, q.option_c, q.option_d, 
+               q.correct_answer, ar.user_answer
+        FROM answer_records ar
+        JOIN questions q ON ar.question_id = q.id
+        WHERE ar.user_id = ? AND ar.is_correct = 0
+        ORDER BY ar.id DESC
+    ''', (session['user_id'],)).fetchall()
+    
+    return render_template('wrong_questions.html', wrong_questions=wrong_answers)
+
 # 题库相关路由
 @app.route('/')
 def index():
@@ -241,6 +275,30 @@ def check_login():
     return jsonify({
         'logged_in': 'user_id' in session
     })
+
+@app.route('/api/delete-record/<int:record_id>', methods=['DELETE'])
+def delete_record(record_id):
+    if 'user_id' not in session:
+        return jsonify({'error': '未登录'}), 401
+    
+    db = get_db()
+    db.execute('DELETE FROM answer_records WHERE id = ? AND user_id = ?', 
+              (record_id, session['user_id']))
+    db.commit()
+    return jsonify({'success': True})
+
+@app.route('/api/remove-wrong-question/<int:question_id>', methods=['DELETE'])
+def remove_wrong_question(question_id):
+    if 'user_id' not in session:
+        return jsonify({'error': '未登录'}), 401
+    
+    db = get_db()
+    db.execute('''
+        DELETE FROM answer_records 
+        WHERE question_id = ? AND user_id = ? AND is_correct = 0
+    ''', (question_id, session['user_id']))
+    db.commit()
+    return jsonify({'success': True})
 
 if __name__ == '__main__':
     app.run(debug=True)
