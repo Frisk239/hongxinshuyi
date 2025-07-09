@@ -25,7 +25,7 @@ def login():
         if user['password'] == password:
             session['user_id'] = user['id']
             session['username'] = user['username']
-            session['avatar_path'] = user['avatar_path'] or 'static/image/default_touxiang.png'
+            session['avatar_path'] = user['avatar_path'] if user['avatar_path'] else 'default_touxiang.png'
             return redirect(url_for('index'))
         return '密码错误', 401
     return render_template('login.html')
@@ -60,31 +60,70 @@ def logout():
     session.clear()
     return redirect(url_for('index'))
 
+@app.route('/change-password', methods=['GET', 'POST'])
+def change_password():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    
+    if request.method == 'POST':
+        old_password = request.form['old_password']
+        new_password = request.form['new_password']
+        confirm_password = request.form['confirm_password']
+        
+        if new_password != confirm_password:
+            return '两次输入的新密码不一致', 400
+            
+        db = get_db()
+        user = db.execute(
+            'SELECT * FROM users WHERE id = ?', (session['user_id'],)
+        ).fetchone()
+        
+        if user['password'] != old_password:
+            return '原密码错误', 401
+            
+        db.execute(
+            'UPDATE users SET password = ? WHERE id = ?',
+            (new_password, session['user_id'])
+        )
+        db.commit()
+        return redirect(url_for('user_center'))
+    
+    return render_template('change_password.html')
+
+@app.route('/delete-account', methods=['POST'])
+def delete_account():
+    if 'user_id' not in session:
+        return jsonify({'error': '未登录'}), 401
+    
+    password = request.form.get('password')
+    db = get_db()
+    user = db.execute(
+        'SELECT * FROM users WHERE id = ?', (session['user_id'],)
+    ).fetchone()
+    
+    if user['password'] != password:
+        return jsonify({'error': '密码错误'}), 401
+    
+    # 删除用户相关数据
+    db.execute('DELETE FROM answer_records WHERE user_id = ?', (session['user_id'],))
+    db.execute('DELETE FROM users WHERE id = ?', (session['user_id'],))
+    db.commit()
+    
+    session.clear()
+    return jsonify({'success': True})
+
 @app.route('/user-center')
 def user_center():
     if 'user_id' not in session:
         return redirect(url_for('login'))
     
-    db = get_db()
-    # 获取用户答题记录
-    records = db.execute('''
-        SELECT q.question_text, ar.user_answer, ar.is_correct 
-        FROM answer_records ar
-        JOIN questions q ON ar.question_id = q.id
-        WHERE ar.user_id = ?
-        ORDER BY ar.id DESC
-    ''', (session['user_id'],)).fetchall()
+    # 确保session中有avatar_path
+    if 'avatar_path' not in session:
+        db = get_db()
+        user = db.execute('SELECT avatar_path FROM users WHERE id = ?', (session['user_id'],)).fetchone()
+        session['avatar_path'] = user['avatar_path'] if user['avatar_path'] else 'default_touxiang.png'
     
-    # 获取错题本
-    wrong_answers = db.execute('''
-        SELECT q.question_text, q.correct_answer, ar.user_answer
-        FROM answer_records ar
-        JOIN questions q ON ar.question_id = q.id
-        WHERE ar.user_id = ? AND ar.is_correct = 0
-        ORDER BY ar.id DESC
-    ''', (session['user_id'],)).fetchall()
-    
-    return render_template('user_center.html', records=records, wrong_answers=wrong_answers)
+    return render_template('user_center.html')
 
 @app.route('/answer-history')
 def answer_history():
