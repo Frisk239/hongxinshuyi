@@ -87,7 +87,7 @@
                 message.textContent = `正确答案是: ${data.correct_answer}`;
             }
             
-            modal.style.display = 'block';
+            modal.style.display = 'flex';
         });
     });
 
@@ -98,6 +98,16 @@
 
     document.getElementById('back-to-list-btn').addEventListener('click', function() {
         window.location.href = '/questions';
+    });
+
+    // 确保没有其他事件触发反馈框
+    document.addEventListener('click', function(e) {
+        if (e.target.id !== 'answer-form' && !e.target.closest('#answer-form')) {
+            const modal = document.getElementById('result-modal');
+            if (modal.style.display === 'flex') {
+                modal.style.display = 'none';
+            }
+        }
     });
 </script>
 {% endblock %}
