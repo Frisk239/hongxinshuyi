@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     });
 
-    // 修改密码弹窗逻辑
+    // 修改密码弹窗逻辑 - 确保只在点击时触发
     document.getElementById('change-password-btn')?.addEventListener('click', function(e) {
         e.preventDefault();
         document.getElementById('change-password-modal').style.display = 'flex';
@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('change-password-modal').style.display = 'none';
     });
 
-    // 注销账号逻辑
+    // 注销账号逻辑 - 确保只在点击时触发
     document.getElementById('delete-account-btn')?.addEventListener('click', function(e) {
         e.preventDefault();
         document.getElementById('delete-account-modal').style.display = 'flex';
@@ -184,6 +184,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.getElementById('cancel-delete-account')?.addEventListener('click', function() {
+        document.getElementById('delete-account-modal').style.display = 'none';
+    });
+
+    // 确保所有弹窗初始状态为隐藏
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('logout-modal').style.display = 'none';
+        document.getElementById('change-password-modal').style.display = 'none';
         document.getElementById('delete-account-modal').style.display = 'none';
     });
 });

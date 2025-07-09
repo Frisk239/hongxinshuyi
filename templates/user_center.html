@@ -6,7 +6,7 @@
 <div class="user-center-container">
     <div class="user-profile">
         <div class="avatar-container">
-            <img src="{{ url_for('static', filename='image/' + session['avatar_path']) }}" alt="用户头像" class="user-avatar">
+            <img src="{{ url_for('static', filename=session['avatar_path']) }}" alt="用户头像" class="user-avatar">
         </div>
         <div class="user-info">
             <h2>{{ session['username'] }}</h2>
@@ -32,7 +32,7 @@
     </div>
 </div>
 
-<div id="logout-modal" class="modal">
+<div id="logout-modal" class="modal" style="display: none;">
     <div class="modal-content">
         <p>确定要退出登录吗？</p>
         <div class="modal-actions">
@@ -42,7 +42,7 @@
     </div>
 </div>
 
-<div id="change-password-modal" class="modal">
+<div id="change-password-modal" class="modal" style="display: none;">
     <div class="modal-content">
         <h3>修改密码</h3>
         <div class="form-group">
@@ -60,7 +60,7 @@
     </div>
 </div>
 
-<div id="delete-account-modal" class="modal">
+<div id="delete-account-modal" class="modal" style="display: none;">
     <div class="modal-content">
         <h3>注销账号</h3>
         <p>此操作将永久删除您的账号和所有数据，且不可恢复！</p>
@@ -199,30 +199,30 @@
 {% block scripts %}
 {{ super() }}
 <script>
-document.getElementById('logout-btn').addEventListener('click', function(e) {
-    e.preventDefault();
-    document.getElementById('logout-modal').style.display = 'flex';
-});
+// 确保页面加载时不自动触发弹窗
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('logout-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('logout-modal').style.display = 'flex';
+    });
 
-document.getElementById('confirm-logout').addEventListener('click', function() {
-    window.location.href = "{{ url_for('logout') }}";
-});
+    document.getElementById('confirm-logout').addEventListener('click', function() {
+        window.location.href = "{{ url_for('logout') }}";
+    });
 
-document.getElementById('cancel-logout').addEventListener('click', function() {
-    document.getElementById('logout-modal').style.display = 'none';
-});
+    document.getElementById('cancel-logout').addEventListener('click', function() {
+        document.getElementById('logout-modal').style.display = 'none';
+    });
 
-document.getElementById('change-password-btn').addEventListener('click', function(e) {
-    e.preventDefault();
-    document.getElementById('change-password-modal').style.display = 'flex';
-});
+    document.getElementById('change-password-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('change-password-modal').style.display = 'flex';
+    });
 
-document.getElementById('delete-account-btn').addEventListener('click', function(e) {
-    e.preventDefault();
-    if(confirm('确定要注销账号吗？此操作不可撤销！')) {
-        // 这里将添加注销账号的逻辑
-        alert('账号注销功能即将上线');
-    }
+    document.getElementById('delete-account-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('delete-account-modal').style.display = 'flex';
+    });
 });
 </script>
 {% endblock %}
