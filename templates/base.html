@@ -20,7 +20,7 @@
                 <button id="search-btn">搜索</button>
             </div>
             <div class="user-avatar">
-                <img src="{{ url_for('static', filename=session.get('avatar_path', 'image/default_touxiang.png')) }}" alt="用户头像" id="avatar-img">
+                <img src="{{ url_for('static', filename=session.get('avatar_path', 'static/image/default_touxiang.png')) }}" alt="用户头像" id="avatar-img">
             </div>
             <a href="{{ url_for('user_center') }}" class="nav-item" id="user-center">个人中心</a>
         </div>

@@ -39,9 +39,11 @@ def register():
         
         db = get_db()
         try:
-            avatar_path = f"static/uploads/{avatar.filename}" if avatar else None
+            avatar_path = f"uploads/{avatar.filename}" if avatar else None
             if avatar:
-                avatar.save(avatar_path)
+                os.makedirs('static/uploads', exist_ok=True)
+                avatar.save(f'static/{avatar_path}')
+                avatar_path = f"uploads/{avatar.filename}"
             
             db.execute(
                 'INSERT INTO users (username, password, avatar_path) VALUES (?, ?, ?)',
@@ -70,7 +72,7 @@ def user_center():
         FROM answer_records ar
         JOIN questions q ON ar.question_id = q.id
         WHERE ar.user_id = ?
-        ORDER BY ar.timestamp DESC
+        ORDER BY ar.id DESC
     ''', (session['user_id'],)).fetchall()
     
     # 获取错题本
@@ -79,7 +81,7 @@ def user_center():
         FROM answer_records ar
         JOIN questions q ON ar.question_id = q.id
         WHERE ar.user_id = ? AND ar.is_correct = 0
-        ORDER BY ar.timestamp DESC
+        ORDER BY ar.id DESC
     ''', (session['user_id'],)).fetchall()
     
     return render_template('user_center.html', records=records, wrong_answers=wrong_answers)
