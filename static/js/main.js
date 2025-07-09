@@ -153,4 +153,37 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('cancel-change-password')?.addEventListener('click', function() {
         document.getElementById('change-password-modal').style.display = 'none';
     });
+
+    // 注销账号逻辑
+    document.getElementById('delete-account-btn')?.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('delete-account-modal').style.display = 'flex';
+    });
+
+    document.getElementById('confirm-delete-account')?.addEventListener('click', function() {
+        const password = document.getElementById('delete-password').value;
+
+        fetch('/api/delete-account', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                password: password
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('账号已成功注销');
+                window.location.href = '/';
+            } else {
+                alert(data.error || '注销账号失败');
+            }
+        });
+    });
+
+    document.getElementById('cancel-delete-account')?.addEventListener('click', function() {
+        document.getElementById('delete-account-modal').style.display = 'none';
+    });
 });

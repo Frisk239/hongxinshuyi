@@ -59,6 +59,21 @@
         </div>
     </div>
 </div>
+
+<div id="delete-account-modal" class="modal">
+    <div class="modal-content">
+        <h3>注销账号</h3>
+        <p>此操作将永久删除您的账号和所有数据，且不可恢复！</p>
+        <div class="form-group">
+            <label for="delete-password">请输入密码确认</label>
+            <input type="password" id="delete-password" required>
+        </div>
+        <div class="modal-actions">
+            <button id="confirm-delete-account">确认注销</button>
+            <button id="cancel-delete-account">取消</button>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block styles %}
@@ -199,7 +214,7 @@ document.getElementById('cancel-logout').addEventListener('click', function() {
 
 document.getElementById('change-password-btn').addEventListener('click', function(e) {
     e.preventDefault();
-    alert('修改密码功能即将上线');
+    document.getElementById('change-password-modal').style.display = 'flex';
 });
 
 document.getElementById('delete-account-btn').addEventListener('click', function(e) {

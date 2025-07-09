@@ -101,12 +101,13 @@ def change_password():
 def api_change_password():
     return change_password()
 
-@app.route('/delete-account', methods=['POST'])
+@app.route('/api/delete-account', methods=['POST'])
 def delete_account():
     if 'user_id' not in session:
         return jsonify({'error': '未登录'}), 401
     
-    password = request.form.get('password')
+    data = request.get_json()
+    password = data['password']
     db = get_db()
     user = db.execute(
         'SELECT * FROM users WHERE id = ?', (session['user_id'],)
