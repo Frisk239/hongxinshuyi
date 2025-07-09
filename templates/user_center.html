@@ -41,6 +41,24 @@
         </div>
     </div>
 </div>
+
+<div id="change-password-modal" class="modal">
+    <div class="modal-content">
+        <h3>修改密码</h3>
+        <div class="form-group">
+            <label for="old-password">原密码</label>
+            <input type="password" id="old-password" required>
+        </div>
+        <div class="form-group">
+            <label for="new-password">新密码</label>
+            <input type="password" id="new-password" required>
+        </div>
+        <div class="modal-actions">
+            <button id="confirm-change-password">确认修改</button>
+            <button id="cancel-change-password">取消</button>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block styles %}

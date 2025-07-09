@@ -66,12 +66,16 @@ def change_password():
         return redirect(url_for('login'))
     
     if request.method == 'POST':
-        old_password = request.form['old_password']
-        new_password = request.form['new_password']
-        confirm_password = request.form['confirm_password']
-        
-        if new_password != confirm_password:
-            return '两次输入的新密码不一致', 400
+        if request.is_json:
+            data = request.get_json()
+            old_password = data['old_password']
+            new_password = data['new_password']
+        else:
+            old_password = request.form['old_password']
+            new_password = request.form['new_password']
+            confirm_password = request.form['confirm_password']
+            if new_password != confirm_password:
+                return jsonify({'error': '两次输入的新密码不一致'}), 400
             
         db = get_db()
         user = db.execute(
@@ -79,16 +83,23 @@ def change_password():
         ).fetchone()
         
         if user['password'] != old_password:
-            return '原密码错误', 401
+            return jsonify({'error': '原密码错误'}), 401
             
         db.execute(
             'UPDATE users SET password = ? WHERE id = ?',
             (new_password, session['user_id'])
         )
         db.commit()
+        
+        if request.is_json:
+            return jsonify({'success': True})
         return redirect(url_for('user_center'))
     
     return render_template('change_password.html')
+
+@app.route('/api/change-password', methods=['POST'])
+def api_change_password():
+    return change_password()
 
 @app.route('/delete-account', methods=['POST'])
 def delete_account():

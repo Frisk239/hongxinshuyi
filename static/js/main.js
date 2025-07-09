@@ -118,4 +118,39 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
     });
+
+    // 修改密码弹窗逻辑
+    document.getElementById('change-password-btn')?.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('change-password-modal').style.display = 'flex';
+    });
+
+    document.getElementById('confirm-change-password')?.addEventListener('click', function() {
+        const oldPassword = document.getElementById('old-password').value;
+        const newPassword = document.getElementById('new-password').value;
+
+        fetch('/api/change-password', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                old_password: oldPassword,
+                new_password: newPassword
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('密码修改成功');
+                document.getElementById('change-password-modal').style.display = 'none';
+            } else {
+                alert(data.error || '密码修改失败');
+            }
+        });
+    });
+
+    document.getElementById('cancel-change-password')?.addEventListener('click', function() {
+        document.getElementById('change-password-modal').style.display = 'none';
+    });
 });
