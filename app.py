@@ -167,15 +167,29 @@ def questions():
 @app.route('/answer')
 def answer():
     question_id = request.args.get('question_id')
-    random = request.args.get('random')
+    random = request.args.get('random', 'false').lower() == 'true'
     db = get_db()
     
     if random:
-        question = db.execute('SELECT * FROM questions ORDER BY RANDOM() LIMIT 1').fetchone()
+        question = db.execute('SELECT id, question_text, option_a, option_b, option_c, option_d, correct_answer, difficulty FROM questions ORDER BY RANDOM() LIMIT 1').fetchone()
     else:
-        question = db.execute('SELECT * FROM questions WHERE id = ?', (question_id,)).fetchone()
+        if not question_id:
+            return redirect(url_for('answer', random=True))
+        question = db.execute('SELECT id, question_text, option_a, option_b, option_c, option_d, correct_answer, difficulty FROM questions WHERE id = ?', (question_id,)).fetchone()
     
-    return render_template('answer.html', question=question)
+    if not question:
+        return redirect(url_for('answer', random=True))
+    
+    return render_template('answer.html', question={
+        'id': question['id'],
+        'question_text': question['question_text'],
+        'option_a': question['option_a'],
+        'option_b': question['option_b'],
+        'option_c': question['option_c'],
+        'option_d': question['option_d'],
+        'correct_answer': question['correct_answer'],
+        'difficulty': question['difficulty']
+    })
 
 # API接口
 @app.route('/api/submit-answer', methods=['POST'])
