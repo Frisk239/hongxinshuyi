@@ -33,7 +33,6 @@
                 <p>C. {{ question.option_c }}</p>
                 <p>D. {{ question.option_d }}</p>
             </div>
-            <button class="answer-btn" data-question-id="{{ question.id }}">开始答题</button>
         </div>
         {% endfor %}
     </div>
@@ -59,11 +58,5 @@
         });
     });
 
-    document.querySelectorAll('.answer-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const questionId = this.dataset.questionId;
-            window.location.href = `/answer?question_id=${questionId}`;
-        });
-    });
 </script>
 {% endblock %}

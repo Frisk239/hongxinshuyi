@@ -1,14 +1,8 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session, g
-from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 import os
 from openai import OpenAI
-from dotenv import load_dotenv
-
-load_dotenv()
-
 app = Flask(__name__)
-app.secret_key = os.getenv('SECRET_KEY') or 'dev-secret-key'
 
 # 初始化数据库
 from database import get_db, init_app
@@ -25,17 +19,21 @@ def login():
             'SELECT * FROM users WHERE username = ?', (username,)
         ).fetchone()
         
-        if user and check_password_hash(user['password'], password):
+        if user is None:
+            return '用户不存在', 401
+        if user['password'] == password:
             session['user_id'] = user['id']
+            session['username'] = user['username']
+            session['avatar_path'] = user['avatar_path'] or 'static/image/default_touxiang.png'
             return redirect(url_for('index'))
-        return 'Invalid username or password', 401
+        return '密码错误', 401
     return render_template('login.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         username = request.form['username']
-        password = generate_password_hash(request.form['password'])
+        password = request.form['password']
         avatar = request.files.get('avatar')
         
         db = get_db()
@@ -63,14 +61,73 @@ def logout():
 @app.route('/')
 def index():
     db = get_db()
-    # 示例英雄数据 - 实际应从数据库获取
     heroes = [
-        {'id': 1, 'name': '毛泽东', 'description': '伟大的无产阶级革命家', 'image': 'image/image1.png'},
-        {'id': 2, 'name': '邓小平', 'description': '改革开放总设计师', 'image': 'image/image2.png'},
-        {'id': 3, 'name': '周恩来', 'description': '人民的好总理', 'image': 'image/image3.png'},
-        {'id': 4, 'name': '朱德', 'description': '红军之父', 'image': 'image/image4.png'}
+        {
+            'id': 1, 
+            'name': '毛泽东', 
+            'description': '伟大的无产阶级革命家', 
+            'image': 'image/image1.png',
+            'contributions': [
+                '领导中国人民取得新民主主义革命胜利',
+                '创立毛泽东思想',
+                '建立中华人民共和国'
+            ],
+            'significance': '毛泽东同志是伟大的马克思主义者，是中国共产党、中国人民解放军和中华人民共和国的主要创立者之一'
+        },
+        {
+            'id': 2,
+            'name': '邓小平', 
+            'description': '改革开放总设计师', 
+            'image': 'image/image2.png',
+            'contributions': [
+                '提出改革开放政策',
+                '提出"一国两制"构想',
+                '创立邓小平理论'
+            ],
+            'significance': '邓小平同志是中国社会主义改革开放和现代化建设的总设计师，邓小平理论的创立者'
+        },
+        {
+            'id': 3,
+            'name': '周恩来', 
+            'description': '人民的好总理', 
+            'image': 'image/image3.png',
+            'contributions': [
+                '新中国外交事业的主要奠基者',
+                '提出和平共处五项原则',
+                '为国家建设和发展做出卓越贡献'
+            ],
+            'significance': '周恩来同志是中国共产党、中华人民共和国和中国人民解放军的主要领导人之一，深受人民爱戴'
+        },
+        {
+            'id': 4,
+            'name': '朱德', 
+            'description': '红军之父', 
+            'image': 'image/image4.png',
+            'contributions': [
+                '中国人民解放军的主要缔造者之一',
+                '参与领导南昌起义',
+                '为革命战争胜利做出重大贡献'
+            ],
+            'significance': '朱德同志是伟大的马克思主义者，无产阶级革命家、政治家和军事家，中国共产党、中国人民解放军和中华人民共和国的主要领导人之一'
+        }
     ]
     return render_template('index.html', heroes=heroes)
+
+@app.route('/events/1')
+def mao():
+    return render_template('events/mao.html')
+
+@app.route('/events/2')
+def deng():
+    return render_template('events/deng.html')
+
+@app.route('/events/3')
+def zhou():
+    return render_template('events/zhou.html')
+
+@app.route('/events/4')
+def zhu():
+    return render_template('events/zhu.html')
 
 @app.route('/questions')
 def questions():
@@ -118,7 +175,10 @@ def submit_answer():
 @app.route('/api/chat', methods=['POST'])
 def chat():
     data = request.get_json()
-    client = OpenAI(api_key=os.getenv('DEEPSEEK_API_KEY'), base_url="https://api.deepseek.com")
+    api_key = os.getenv('DEEPSEEK_API_KEY')
+    if not api_key:
+        return jsonify({'error': 'DEEPSEEK_API_KEY environment variable not set'}), 500
+    client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
     
     response = client.chat.completions.create(
         model="deepseek-chat",
