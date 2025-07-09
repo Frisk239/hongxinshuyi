@@ -2,6 +2,12 @@
 
 {% block title %}个人中心{% endblock %}
 
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/user_center.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="user-center-container">
     <div class="user-profile">
@@ -74,126 +80,6 @@
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block styles %}
-{{ super() }}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-<style>
-.user-center-container {
-    max-width: 500px;
-    margin: 30px auto;
-    padding: 20px;
-}
-
-.user-profile {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 30px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #eee;
-}
-
-.user-avatar {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #c12c2c;
-    margin-bottom: 15px;
-}
-
-.user-info h2 {
-    margin: 0;
-    color: #333;
-    font-size: 24px;
-}
-
-.user-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.action-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 20px;
-    background-color: #f8f8f8;
-    color: #333;
-    text-decoration: none;
-    border-radius: 8px;
-    transition: all 0.3s;
-    border: 1px solid #ddd;
-}
-
-.action-btn:hover {
-    background-color: #e9e9e9;
-    transform: translateY(-2px);
-}
-
-.action-btn i {
-    width: 20px;
-    text-align: center;
-}
-
-.logout-btn {
-    background-color: #f8f8f8;
-    color: #c12c2c;
-    border: 1px solid #c12c2c;
-}
-
-.logout-btn:hover {
-    background-color: #ffecec;
-}
-
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.5);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-}
-
-.modal-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    max-width: 400px;
-    width: 100%;
-    text-align: center;
-}
-
-.modal-actions {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.modal-actions button {
-    padding: 8px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-#confirm-logout {
-    background-color: #c12c2c;
-    color: white;
-}
-
-#cancel-logout {
-    background-color: #f0f0f0;
-}
-</style>
 {% endblock %}
 
 {% block scripts %}

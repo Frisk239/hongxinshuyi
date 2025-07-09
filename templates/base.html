@@ -7,6 +7,12 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+    <style>
+        .content {
+            padding: 20px;
+            min-height: calc(100vh - 120px);
+        }
+    </style>
     {% block head %}{% endblock %}
 </head>
 <body>
@@ -29,7 +35,7 @@
 
     <div id="particles-js"></div>
     
-    <main class="content">
+    <main class="content" style="position: relative; z-index: 1;">
         {% block content %}{% endblock %}
     </main>
 
