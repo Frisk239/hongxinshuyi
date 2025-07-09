@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}首页{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <img src="{{ url_for('static', filename='image/image1.png') }}" alt="轮播图1">
+            </div>
+            <div class="swiper-slide">
+                <img src="{{ url_for('static', filename='image/image2.png') }}" alt="轮播图2">
+            </div>
+            <div class="swiper-slide">
+                <img src="{{ url_for('static', filename='image/image3.png') }}" alt="轮播图3">
+            </div>
+            <div class="swiper-slide">
+                <img src="{{ url_for('static', filename='image/image4.png') }}" alt="轮播图4">
+            </div>
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
+
+    <div class="hero-list">
+        <h2>红色历史与英雄人物</h2>
+        <div class="hero-grid">
+            {% for hero in heroes %}
+            <div class="hero-card">
+                <img src="{{ url_for('static', filename=hero.image) }}" alt="{{ hero.name }}">
+                <h3>{{ hero.name }}</h3>
+                <p>{{ hero.description }}</p>
+<a href="{{ url_for('answer', question_id=hero.id) }}">了解更多</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+    const swiper = new Swiper('.swiper-container', {
+        loop: true,
+        autoplay: {
+            delay: 3000,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+    });
+</script>
+{% endblock %}

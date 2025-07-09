@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>红芯数忆 - {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">红芯数忆</div>
+        <div class="nav-items">
+            <a href="{{ url_for('index') }}" class="nav-item">首页</a>
+            <a href="{{ url_for('questions') }}" class="nav-item">题库</a>
+            <a href="{{ url_for('answer') }}" class="nav-item">答题</a>
+            <div class="search-box">
+                <input type="text" placeholder="搜索问题..." id="search-input">
+                <button id="search-btn">搜索</button>
+            </div>
+            <div class="user-avatar">
+                <img src="{{ url_for('static', filename='image/default_touxiang.png') }}" alt="用户头像" id="avatar-img">
+            </div>
+            <a href="#" class="nav-item" id="user-center">个人中心</a>
+        </div>
+    </nav>
+
+    <div id="particles-js"></div>
+    
+    <main class="content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <div id="ai-chat-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div class="chat-container" id="chat-container"></div>
+            <div class="input-area">
+                <input type="text" id="user-input" placeholder="输入您的问题...">
+                <button id="send-btn">发送</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

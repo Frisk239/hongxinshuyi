@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}答题{% endblock %}
+
+{% block content %}
+<div class="answer-container">
+    <div class="question-display">
+        <div class="difficulty-info">
+            当前题目难度: 
+            <span class="difficulty-badge difficulty-{{ question.difficulty }}">
+                {% if question.difficulty == 1 %}简单
+                {% elif question.difficulty == 2 %}中等
+                {% else %}困难
+                {% endif %}
+            </span>
+        </div>
+        <h2>{{ question.question_text }}</h2>
+        
+        <form id="answer-form">
+            <div class="options-list">
+                <label class="option-item">
+                    <input type="radio" name="answer" value="A" required>
+                    <span>A. {{ question.option_a }}</span>
+                </label>
+                <label class="option-item">
+                    <input type="radio" name="answer" value="B">
+                    <span>B. {{ question.option_b }}</span>
+                </label>
+                <label class="option-item">
+                    <input type="radio" name="answer" value="C">
+                    <span>C. {{ question.option_c }}</span>
+                </label>
+                <label class="option-item">
+                    <input type="radio" name="answer" value="D">
+                    <span>D. {{ question.option_d }}</span>
+                </label>
+            </div>
+            
+            <button type="submit" class="submit-btn">提交答案</button>
+        </form>
+    </div>
+    
+    <div id="result-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <h3 id="result-title"></h3>
+            <p id="result-message"></p>
+            <div class="action-buttons">
+                <button id="next-question-btn">下一题</button>
+                <button id="back-to-list-btn">返回题库</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+    document.getElementById('answer-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const selectedAnswer = document.querySelector('input[name="answer"]:checked').value;
+        const questionId = '{{ question.id }}';
+        
+        fetch('/api/submit-answer', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                question_id: questionId,
+                user_answer: selectedAnswer
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            const modal = document.getElementById('result-modal');
+            const title = document.getElementById('result-title');
+            const message = document.getElementById('result-message');
+            
+            if (data.correct) {
+                title.textContent = '回答正确!';
+                title.style.color = '#4CAF50';
+                message.textContent = `正确答案是: ${data.correct_answer}`;
+            } else {
+                title.textContent = '回答错误';
+                title.style.color = '#F44336';
+                message.textContent = `正确答案是: ${data.correct_answer}`;
+            }
+            
+            modal.style.display = 'block';
+        });
+    });
+
+    document.getElementById('next-question-btn').addEventListener('click', function() {
+        // 随机获取下一题
+        window.location.href = '/answer?random=true';
+    });
+
+    document.getElementById('back-to-list-btn').addEventListener('click', function() {
+        window.location.href = '/questions';
+    });
+</script>
+{% endblock %}
