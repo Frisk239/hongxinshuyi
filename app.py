@@ -133,7 +133,7 @@ def user_center():
     if 'avatar_path' not in session:
         db = get_db()
         user = db.execute('SELECT avatar_path FROM users WHERE id = ?', (session['user_id'],)).fetchone()
-        session['avatar_path'] = user['avatar_path'] if user['avatar_path'] else 'default_touxiang.png'
+        session['avatar_path'] = user['avatar_path'] if user['avatar_path'] else 'image/default_touxiang.png'
     
     return render_template('user_center.html')
 
