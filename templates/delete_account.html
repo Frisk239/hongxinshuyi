@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}注销账号{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<style>
+.auth-container {
+    max-width: 450px;
+    margin: 5% auto;
+    padding: 40px;
+    background: linear-gradient(145deg, #ffffff, #f9f9f9);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.auth-header h2 {
+    color: var(--primary-color);
+    font-size: 32px;
+    margin-bottom: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.auth-header p {
+    color: #666;
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+.form-group {
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 10px;
+    color: #444;
+    font-weight: 500;
+    font-size: 15px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background-color: #f8f8f8;
+}
+
+.form-group input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(193, 44, 44, 0.1);
+    background-color: var(--white);
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    border: none;
+    border-radius: var(--border-radius-md);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition-default);
+    box-shadow: var(--shadow-sm);
+    margin-top: 20px;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.cancel-btn {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    color: #666;
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition-default);
+}
+
+.cancel-btn:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
+.error-message {
+    color: var(--primary-color);
+    font-size: 14px;
+    margin-top: 8px;
+    padding-left: 5px;
+    font-weight: 500;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-header">
+        <h2><i class="fas fa-user-times"></i> 注销账号</h2>
+        <p>注销账号将删除您的所有数据，且无法恢复。请谨慎操作。</p>
+    </div>
+    <form id="delete-account-form" method="POST" action="{{ url_for('delete_account') }}">
+        <div class="form-group">
+            <label for="password">请输入密码确认</label>
+            <input type="password" id="password" name="password" required>
+            <div class="error-message" id="password-error"></div>
+        </div>
+        <button type="submit" class="submit-btn">确认注销</button>
+        <a href="{{ url_for('user_center') }}" class="cancel-btn">取消</a>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+ document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('delete-account-form');
+    const passwordInput = document.getElementById('password');
+    const errorElement = document.getElementById('password-error');
+
+    form.addEventListener('submit', function(e) {
+            e.preventDefault(); // 阻止表单默认提交
+            let isValid = true;
+            errorElement.textContent = '';
+
+            if (!passwordInput.value.trim()) {
+                errorElement.textContent = '请输入密码';
+                isValid = false;
+            }
+
+            if (!isValid) {
+                return;
+            }
+
+            if (!confirm('确定要注销账号吗？此操作不可恢复！')) {
+                return;
+            }
+
+            // 发送JSON格式请求
+            fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ password: passwordInput.value.trim() })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = '{{ url_for('index') }}';
+                } else {
+                    errorElement.textContent = data.error || '注销失败，请重试';
+                }
+            })
+            .catch(error => {
+                errorElement.textContent = '网络错误，请重试';
+                console.error('Error:', error);
+            });
+        });
+});
+</script>
+{% endblock %}

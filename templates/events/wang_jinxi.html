@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="hero-container">
+    <div class="hero-header">
+        <img src="{{ url_for('static', filename='image/image12.jpg') }}" alt="王进喜" class="hero-image">
+        <h1>王进喜</h1>
+        <p class="hero-title">铁人</p>
+    </div>
+    <div class="hero-content">
+        <section class="hero-section">
+            <h2>人物简介</h2>
+            <p>王进喜（1923年—1970年），甘肃玉门人，中国石油工人的杰出代表，被誉为“铁人”。</p>
+        </section>
+        <section class="hero-section">
+            <h2>历史贡献</h2>
+            <ul class="hero-contributions">
+                <li>带领钻井队开发大庆油田，被誉为“铁人”</li>
+                <li>在极端困难条件下保障石油生产</li>
+                <li>树立了自力更生、艰苦奋斗的榜样</li>
+            </ul>
+        </section>
+        <section class="hero-section">
+            <h2>历史意义</h2>
+            <p>王进喜的“铁人精神”成为中国工人阶级艰苦奋斗、无私奉献的象征，激励了无数建设者。</p>
+        </section>
+    </div>
+</div>
+{% endblock %}

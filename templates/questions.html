@@ -5,15 +5,15 @@
 {% block content %}
 <div class="questions-container">
     <div class="filter-section">
-        <h2>中国共产党知识题库</h2>
-        <div class="difficulty-filter">
-            <span>难度筛选：</span>
-            <button class="filter-btn active" data-difficulty="all">全部</button>
-            <button class="filter-btn" data-difficulty="1">简单</button>
-            <button class="filter-btn" data-difficulty="2">中等</button>
-            <button class="filter-btn" data-difficulty="3">困难</button>
-        </div>
+    <h2>{% if search_query %}搜索结果: '{{ search_query }}'{% else %}中国共产党知识题库{% endif %}</h2>
+    <div class="difficulty-filter">
+        <span>难度筛选：</span>
+        <button class="filter-btn {% if current_difficulty == 'all' %}active{% endif %}" data-difficulty="all">全部</button>
+        <button class="filter-btn {% if current_difficulty == '1' %}active{% endif %}" data-difficulty="1">简单</button>
+        <button class="filter-btn {% if current_difficulty == '2' %}active{% endif %}" data-difficulty="2">中等</button>
+        <button class="filter-btn {% if current_difficulty == '3' %}active{% endif %}" data-difficulty="3">困难</button>
     </div>
+</div>
 
     <div class="questions-list">
         {% for question in questions %}
@@ -33,6 +33,9 @@
                 <p>C. {{ question.option_c }}</p>
                 <p>D. {{ question.option_d }}</p>
             </div>
+            <div class="question-answer">
+                <strong>正确答案：{{ question.correct_answer }}</strong>
+            </div>
         </div>
         {% endfor %}
     </div>
@@ -44,19 +47,51 @@
 <script>
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.addEventListener('click', function() {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            
             const difficulty = this.dataset.difficulty;
-            document.querySelectorAll('.question-card').forEach(card => {
-                if (difficulty === 'all' || card.dataset.difficulty === difficulty) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+            const searchQuery = new URLSearchParams(window.location.search).get('q');
+            
+            let url = '';
+            if (searchQuery) {
+                url = `/search?q=${encodeURIComponent(searchQuery)}&difficulty=${difficulty}`;
+            } else {
+                url = `/questions?difficulty=${difficulty}`;
+            }
+            
+            window.location.href = url;
         });
     });
 
+    // 设置当前活动的筛选按钮
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentDifficulty = '{{ current_difficulty or 'all' }}';
+        const buttons = document.querySelectorAll('.filter-btn');
+        buttons.forEach(btn => {
+            if (btn.dataset.difficulty === currentDifficulty) {
+                btn.classList.add('active');
+            }
+        });
+
+        // 关键词高亮功能
+        const searchQuery = {{ (search_query or '')|tojson }};
+        if (searchQuery) {
+            // 转义正则特殊字符
+            const escapedQuery = searchQuery.replace(/[.*+?^${}()|\[\]\\]/g, '\$&');
+            const regex = new RegExp(`(${escapedQuery})`, 'gi');
+            
+            // 遍历所有题目卡片
+            document.querySelectorAll('.question-card').forEach(card => {
+                // 处理问题文本
+                const questionText = card.querySelector('.question-header h3');
+                if (questionText) {
+                    questionText.innerHTML = questionText.textContent.replace(regex, '<span class="highlight">$1</span>');
+                }
+                
+                // 处理选项
+                card.querySelectorAll('.question-options p').forEach(option => {
+                    option.innerHTML = option.textContent.replace(regex, '<span class="highlight">$1</span>');
+                });
+            });
+        }
+    });
 </script>
 {% endblock %}

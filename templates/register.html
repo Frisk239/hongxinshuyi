@@ -14,7 +14,7 @@
         <p>加入红芯数忆学习平台</p>
     </div>
     
-    <form method="POST" enctype="multipart/form-data" class="auth-form">
+    <form method="POST" enctype="multipart/form-data" class="auth-form" onsubmit="return validateForm()">
         <div class="form-group">
             <label for="username">用户名</label>
             <input type="text" id="username" name="username" required>
@@ -41,6 +41,30 @@
 </div>
 
 <script>
+function getCharacterLength(str) {
+    let length = 0;
+    for (let i = 0; i < str.length; i++) {
+        const charCode = str.charCodeAt(i);
+        // 中文字符Unicode范围：0x4e00-0x9fff
+        if (charCode >= 0x4e00 && charCode <= 0x9fff) {
+            length += 2;
+        } else {
+            length += 1;
+        }
+    }
+    return length;
+}
+
+function validateForm() {
+    const username = document.getElementById('username').value;
+    const charLength = getCharacterLength(username);
+    if (charLength > 20) {
+        alert('用户名不能超过20个字符（中文字符算2个字符）');
+        return false;
+    }
+    return true;
+}
+
 document.getElementById('avatar').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {

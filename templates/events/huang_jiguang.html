@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="hero-container">
+    <div class="hero-header">
+        <img src="{{ url_for('static', filename='image/image8.jpg') }}" alt="黄继光" class="hero-image">
+        <h1>黄继光</h1>
+        <p class="hero-title">特级英雄</p>
+    </div>
+    <div class="hero-content">
+        <section class="hero-section">
+            <h2>人物简介</h2>
+            <p>黄继光（1931年—1952年），四川省中江县人，中国人民志愿军特级英雄。</p>
+        </section>
+        <section class="hero-section">
+            <h2>历史贡献</h2>
+            <ul class="hero-contributions">
+                <li>抗美援朝上甘岭战役中舍身堵枪眼</li>
+                <li>为部队冲锋开辟道路</li>
+                <li>被追授“特级英雄”称号</li>
+            </ul>
+        </section>
+        <section class="hero-section">
+            <h2>历史意义</h2>
+            <p>黄继光用生命诠释了革命英雄主义精神，成为中华民族英勇无畏的象征。</p>
+        </section>
+    </div>
+</div>
+{% endblock %}

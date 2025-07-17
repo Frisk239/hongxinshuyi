@@ -90,20 +90,6 @@ document.addEventListener('DOMContentLoaded', function() {
         retina_detect: true
     });
 
-    // 搜索按钮点击事件 - 仅保留视觉元素
-    const searchBtn = document.getElementById('search-btn');
-    searchBtn?.addEventListener('click', function(e) {
-        e.preventDefault();
-        alert('搜索功能已禁用');
-    });
-
-    // 阻止搜索框回车键自动提交
-    document.getElementById('search-input')?.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            alert('搜索功能已禁用');
-        }
-    });
 
     // 用户头像点击事件
     document.getElementById('avatar-img')?.addEventListener('click', function() {
@@ -166,12 +152,10 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch('/api/delete-account', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                password: password
+             'Content-Type': 'application/json', // 确保这里能生效
+                },
+                body: JSON.stringify({ password: password }),
             })
-        })
         .then(response => response.json())
         .then(data => {
             if (data.success) {

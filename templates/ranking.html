@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}排行榜{% endblock %}
+
+{% block content %}
+<div class="ranking-container">
+    <h2>用户答题排行榜</h2>
+    <div class="ranking-list">
+        <table class="ranking-table">
+            <thead>
+                <tr>
+                    <th>排名</th>
+                    <th>用户</th>
+                    <th>答对题数</th>
+                    <th>答题总数</th>
+                    <th>正确率</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in ranking_data %}
+                <tr>
+                     <td class="rank">
+                        {% if loop.index == 1 and user.total_answers > 0 %}
+                        <div class="rank-badge first">1</div>
+                        {% elif loop.index == 2 and user.total_answers > 0 %}
+                        <div class="rank-badge second">2</div>
+                        {% elif loop.index == 3 and user.total_answers > 0 %}
+                        <div class="rank-badge third">3</div>
+                        {% else %}
+                        {% if user.total_answers > 0 %}
+                        <div class="rank-badge">{{ loop.index }}</div>
+                        {% else %}
+<span style="display: inline-block; width: 24px; height: 24px; line-height: 24px; text-align: center;">{{ loop.index }}</span>
+                        {% endif %}
+                        {% endif %}
+                    </td>
+                    <td class="username" style="display: flex; align-items: center;">{% if user.total_answers > 0 %}<img src="{{ url_for('get_avatar_by_username', username=user.username) }}" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 8px; vertical-align: middle;">{% else %}<span style="display: inline-block; width: 38px; height: 30px; vertical-align: middle;"></span>{% endif %}{{ user.username }}</td>
+                    <td>{{ user.correct_count }}</td>
+                    <td>{{ user.total_answers }}</td>
+                    <td>{{ "%.1f%%"|format(user.correct_rate) if user.correct_rate else '0.0%' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+        <div class="user-rank-section">
+            <h3>我的排名</h3>
+            <table class="ranking-table">
+                <thead>
+                    <tr>
+                        <th>排名</th>
+                        <th>用户</th>
+                        <th>答对题数</th>
+                        <th>答题总数</th>
+                        <th>正确率</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="rank"><div class="rank-badge">{{ user_rank if user_rank else '未上榜' }}</div></td>
+                    <td class="username">{{ session.username if 'username' in session else '未登录用户' }}</td>
+                    <td>{{ user_data.correct_count if user_data else 0 }}</td>
+                    <td>{{ user_data.total_answers if user_data else 0 }}</td>
+                    <td>{{ "%.1f%%"|format((user_data.correct_count / user_data.total_answers * 100) if (user_data and user_data.total_answers > 0) else 0) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+</div>
+{% endblock %}
+
+{% block head %}
+<style>
+.ranking-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.user-rank-section {
+    margin-top: 30px;
+}
+
+.ranking-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+}
+
+.ranking-table th,
+.ranking-table td {
+    padding: 15px;
+    text-align: center;
+}
+
+.ranking-table thead {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.ranking-table tbody tr {
+    border-bottom: 1px solid var(--gray-light);
+    transition: background-color 0.2s;
+}
+
+.ranking-table tbody tr:hover {
+    background-color: var(--primary-light);
+}
+
+.rank-badge {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 50%;
+    background-color: var(--gray);
+    color: var(--text-color);
+    font-weight: bold;
+}
+
+.rank-badge.first {
+    background-color: #FFD700;
+    color: #333;
+}
+
+.rank-badge.second {
+    background-color: #C0C0C0;
+    color: #333;
+}
+
+.rank-badge.third {
+    background-color: #CD7F32;
+    color: white;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rank-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+</style>
+{% endblock %}

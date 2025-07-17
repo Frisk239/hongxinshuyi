@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="hero-container">
+    <div class="hero-header">
+        <img src="{{ url_for('static', filename='image/image14.jpg') }}" alt="杨靖宇" class="hero-image">
+        <h1>杨靖宇</h1>
+        <p class="hero-title">抗日民族英雄</p>
+    </div>
+    <div class="hero-content">
+        <section class="hero-section">
+            <h2>人物简介</h2>
+            <p>杨靖宇（1905年—1940年），原名马尚德，河南确山人，东北抗日联军的主要创建者和领导人之一。</p>
+        </section>
+        <section class="hero-section">
+            <h2>历史贡献</h2>
+            <ul class="hero-contributions">
+                <li>领导东北抗日联军坚持艰苦卓绝的游击战争</li>
+                <li>在极端恶劣条件下与日军周旋，直至壮烈牺牲</li>
+                <li>展现了中华民族不屈不挠的抗日精神</li>
+            </ul>
+        </section>
+        <section class="hero-section">
+            <h2>历史意义</h2>
+            <p>杨靖宇是东北抗日联军的主要创建者和领导人，他的英雄气概和民族气节永载史册。</p>
+        </section>
+    </div>
+</div>
+{% endblock %}

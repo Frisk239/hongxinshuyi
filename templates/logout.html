@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}退出登录{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<style>
+.auth-container {
+    max-width: 450px;
+    margin: 5% auto;
+    padding: 40px;
+    background: linear-gradient(145deg, #ffffff, #f9f9f9);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+.auth-header h2 {
+    color: var(--primary-color);
+    font-size: 32px;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.logout-message {
+    color: #444;
+    font-size: 18px;
+    margin-bottom: 35px;
+    line-height: 1.6;
+}
+
+.button-group {
+    display: flex;
+    gap: 15px;
+}
+
+.submit-btn, .cancel-btn {
+    flex: 1;
+    padding: 15px;
+    border-radius: var(--border-radius-md);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition-default);
+    text-align: center;
+    text-decoration: none;
+}
+
+.submit-btn {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    border: none;
+}
+
+.cancel-btn {
+    background-color: #f1f1f1;
+    color: #444;
+    border: 1px solid #ddd;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.cancel-btn:hover {
+    background-color: #e9e9e9;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-header">
+        <h2><i class="fas fa-sign-out-alt"></i> 退出登录</h2>
+    </div>
+    <p class="logout-message">您确定要退出当前账号吗？</p>
+    <form method="POST" action="{{ url_for('logout') }}">
+        <div class="button-group">
+            <button type="submit" class="submit-btn">确认退出</button>
+            <a href="{{ url_for('user_center') }}" class="cancel-btn">取消</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

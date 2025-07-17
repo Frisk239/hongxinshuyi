@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="user-logged-in" content="{{ 'true' if session.user_id else 'false' }}">
     <title>红芯数忆 - {% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -11,6 +12,17 @@
         .content {
             padding: 20px;
             min-height: calc(100vh - 120px);
+        }
+        .float-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .ai-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
     </style>
     {% block head %}{% endblock %}
@@ -22,14 +34,17 @@
             <a href="{{ url_for('index') }}" class="nav-item">首页</a>
             <a href="{{ url_for('questions') }}" class="nav-item">题库</a>
             <a href="{{ url_for('answer') }}" class="nav-item">答题</a>
+            <a href="{{ url_for('ranking') }}" class="nav-item">排行榜</a>
             <div class="search-box">
                 <input type="text" placeholder="搜索问题..." id="search-input">
                 <button id="search-btn">搜索</button>
             </div>
             <div class="user-avatar">
-                <img src="{{ url_for('static', filename=session.get('avatar_path', 'image/default_touxiang.png')) }}" alt="用户头像" id="avatar-img">
+                <img src="{{ url_for('get_avatar') }}" alt="用户头像" id="avatar-img">
             </div>
-            <a href="{{ url_for('user_center') }}" class="nav-item" id="user-center">个人中心</a>
+            <a href="{{ url_for('user_center') }}" class="nav-item" id="user-center">
+                <i class="fas fa-user"></i> 个人中心
+            </a>
         </div>
     </nav>
 
@@ -42,6 +57,65 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+    <script>
+        // 为头像添加缓存控制
+        document.addEventListener('DOMContentLoaded', function() {
+            const avatarImg = document.getElementById('avatar-img');
+            if (avatarImg) {
+                // 添加时间戳防止缓存
+                avatarImg.src += '?t=' + new Date().getTime();
+            }
+        });
+    </script>
+<script>
+    // 搜索功能实现
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('search-input');
+        const searchBtn = document.getElementById('search-btn');
+        
+        // 从URL参数设置搜索框值
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('q')) {
+            searchInput.value = urlParams.get('q');
+        }
+        
+        // 搜索按钮点击事件
+        searchBtn.addEventListener('click', function() {
+            performSearch();
+        });
+        
+        // 回车键触发搜索
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+        
+        function performSearch() {
+            const query = searchInput.value.trim();
+            if (query) {
+                window.location.href = `/search?q=${encodeURIComponent(query)}`;
+            }
+        }
+    });
+</script>
     {% block scripts %}{% endblock %}
+    <div id="ai-chat-float-button" class="float-button">
+      <span class="ai-text">AI</span>
+    </div>
+    <div id="ai-chat-dialog" class="chat-dialog">
+      <div class="dialog-header">
+        <h3>AI问答</h3>
+        <button class="close-btn">&times;</button>
+      </div>
+      <div class="dialog-body">
+        <div class="chat-messages" id="chat-messages"></div>
+        <div class="input-area">
+          <input type="text" id="question-input" placeholder="请输入您的问题...">
+          <button id="send-btn">发送</button>
+        </div>
+      </div>
+    </div>
 </body>
 </html>

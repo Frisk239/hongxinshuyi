@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="hero-container">
+    <div class="hero-header">
+        <img src="{{ url_for('static', filename='image/image11.jpg') }}" alt="焦裕禄" class="hero-image">
+        <h1>焦裕禄</h1>
+        <p class="hero-title">县委书记的榜样</p>
+    </div>
+    <div class="hero-content">
+        <section class="hero-section">
+            <h2>人物简介</h2>
+            <p>焦裕禄（1922年—1964年），山东淄博人，原兰考县委书记，被誉为“县委书记的榜样”。</p>
+        </section>
+        <section class="hero-section">
+            <h2>历史贡献</h2>
+            <ul class="hero-contributions">
+                <li>带领兰考人民治理风沙、水涝、盐碱三害</li>
+                <li>树立了“县委书记的榜样”</li>
+                <li>身患重病仍坚持工作，直至生命最后一刻</li>
+            </ul>
+        </section>
+        <section class="hero-section">
+            <h2>历史意义</h2>
+            <p>焦裕禄精神体现了共产党人的初心和使命，成为全心全意为人民服务的典范。</p>
+        </section>
+    </div>
+</div>
+{% endblock %}

@@ -3,13 +3,15 @@
 {% block title %}错题本{% endblock %}
 
 {% block content %}
-<div class="wrong-questions-container">
+<div class="questions-container">
     <h2>我的错题本</h2>
-    <div class="wrong-questions-list">
+    <div class="questions-list">
         {% for question in wrong_questions %}
         <div class="question-card">
-            <div class="question-text">{{ question.question_text }}</div>
-            <div class="options">
+            <div class="question-header">
+                <h3>{{ question.question_text }}</h3>
+            </div>
+            <div class="question-options">
                 <p>A. {{ question.option_a }}</p>
                 <p>B. {{ question.option_b }}</p>
                 <p>C. {{ question.option_c }}</p>
