@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}首页{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <img src="{{ url_for('static', filename='image/image1.png') }}" alt="轮播图1">
+            </div>
+            <div class="swiper-slide">
+                <img src="{{ url_for('static', filename='image/image2.png') }}" alt="轮播图2">
+            </div>
+            <div class="swiper-slide">
+                <img src="{{ url_for('static', filename='image/image3.png') }}" alt="轮播图3">
+            </div>
+            <div class="swiper-slide">
+        <img src="{{ url_for('static', filename='image/image4.png') }}" alt="轮播图4">
+    </div>
+    <div class="swiper-slide">
+        <img src="{{ url_for('static', filename='image/image10.jpg') }}" alt="雷锋">
+    </div>
+    <div class="swiper-slide">
+        <img src="{{ url_for('static', filename='image/image11.jpg') }}" alt="焦裕禄">
+    </div>
+</div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
+
+    <div class="hero-list">
+        <h2>红色历史与英雄人物</h2>
+        <div class="hero-grid">
+            {% for hero in heroes %}
+            <div class="hero-card">
+                <img src="{{ url_for('static', filename=hero.image) }}" alt="{{ hero.name }}" class="{% if hero.image == 'image5.jpg' %}full-body full-body-5{% elif hero.image == 'image6.jpg' %}full-body full-body-6{% elif hero.image == 'image14.jpg' %}full-body full-body-14{% elif hero.image == 'image13.jpg' %}full-body{% endif %}">
+                <h3>{{ hero.name }}</h3>
+                <p>{{ hero.description }}</p>
+<a class="learn-more-btn" href="{{ url_for('mao' if hero.id == 1 else 'deng' if hero.id == 2 else 'zhou' if hero.id == 3 else 'zhu' if hero.id == 4 else 'lin_jiaomin' if hero.id == 5 else 'li_dazhao' if hero.id == 6 else 'dong_cunrui' if hero.id == 7 else 'huang_jiguang' if hero.id == 8 else 'liu_hulan' if hero.id == 9 else 'lei_feng' if hero.id == 10 else 'jiao_yulu' if hero.id == 11 else 'wang_jinxi' if hero.id == 12 else 'zhao_yiman' if hero.id == 13 else 'yang_jingyu') }}">了解更多</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+    const swiper = new Swiper('.swiper-container', {
+        loop: true,
+        autoplay: {
+            delay: 3000,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+    });
+</script>
+{% endblock %}

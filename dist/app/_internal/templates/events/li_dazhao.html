@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="hero-container">
+    <div class="hero-header">
+        <img src="{{ url_for('static', filename='image/image6.jpg') }}" alt="李大钊" class="hero-image">
+        <h1>李大钊</h1>
+        <p class="hero-title">中国共产主义运动的先驱</p>
+    </div>
+    <div class="hero-content">
+        <section class="hero-section">
+            <h2>人物简介</h2>
+            <p>李大钊（1889年—1927年），字守常，河北乐亭人。中国共产党主要创始人之一，杰出的无产阶级革命家、思想家。</p>
+        </section>
+        <section class="hero-section">
+            <h2>历史贡献</h2>
+            <ul class="hero-contributions">
+                <li>传播马克思主义思想</li>
+                <li>参与创建中国共产党</li>
+                <li>领导北方革命运动</li>
+            </ul>
+        </section>
+        <section class="hero-section">
+            <h2>历史意义</h2>
+            <p>李大钊是中国最早的马克思主义者之一，为中国革命事业奠定了思想基础，是中国共产主义运动的先驱。</p>
+        </section>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}题库{% endblock %}
+
+{% block content %}
+<div class="questions-container">
+    <div class="filter-section">
+    <h2>{% if search_query %}搜索结果: '{{ search_query }}'{% else %}中国共产党知识题库{% endif %}</h2>
+    <div class="difficulty-filter">
+        <span>难度筛选：</span>
+        <button class="filter-btn {% if current_difficulty == 'all' %}active{% endif %}" data-difficulty="all">全部</button>
+        <button class="filter-btn {% if current_difficulty == '1' %}active{% endif %}" data-difficulty="1">简单</button>
+        <button class="filter-btn {% if current_difficulty == '2' %}active{% endif %}" data-difficulty="2">中等</button>
+        <button class="filter-btn {% if current_difficulty == '3' %}active{% endif %}" data-difficulty="3">困难</button>
+    </div>
+</div>
+
+    <div class="questions-list">
+        {% for question in questions %}
+        <div class="question-card" data-difficulty="{{ question.difficulty }}">
+            <div class="question-header">
+                <span class="difficulty-badge difficulty-{{ question.difficulty }}">
+                    {% if question.difficulty == 1 %}简单
+                    {% elif question.difficulty == 2 %}中等
+                    {% else %}困难
+                    {% endif %}
+                </span>
+                <h3>{{ question.question_text }}</h3>
+            </div>
+            <div class="question-options">
+                <p>A. {{ question.option_a }}</p>
+                <p>B. {{ question.option_b }}</p>
+                <p>C. {{ question.option_c }}</p>
+                <p>D. {{ question.option_d }}</p>
+            </div>
+            <div class="question-answer">
+                <strong>正确答案：{{ question.correct_answer }}</strong>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const difficulty = this.dataset.difficulty;
+            const searchQuery = new URLSearchParams(window.location.search).get('q');
+            
+            let url = '';
+            if (searchQuery) {
+                url = `/search?q=${encodeURIComponent(searchQuery)}&difficulty=${difficulty}`;
+            } else {
+                url = `/questions?difficulty=${difficulty}`;
+            }
+            
+            window.location.href = url;
+        });
+    });
+
+    // 设置当前活动的筛选按钮
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentDifficulty = '{{ current_difficulty or 'all' }}';
+        const buttons = document.querySelectorAll('.filter-btn');
+        buttons.forEach(btn => {
+            if (btn.dataset.difficulty === currentDifficulty) {
+                btn.classList.add('active');
+            }
+        });
+
+        // 关键词高亮功能
+        const searchQuery = {{ (search_query or '')|tojson }};
+        if (searchQuery) {
+            // 转义正则特殊字符
+            const escapedQuery = searchQuery.replace(/[.*+?^${}()|\[\]\\]/g, '\$&');
+            const regex = new RegExp(`(${escapedQuery})`, 'gi');
+            
+            // 遍历所有题目卡片
+            document.querySelectorAll('.question-card').forEach(card => {
+                // 处理问题文本
+                const questionText = card.querySelector('.question-header h3');
+                if (questionText) {
+                    questionText.innerHTML = questionText.textContent.replace(regex, '<span class="highlight">$1</span>');
+                }
+                
+                // 处理选项
+                card.querySelectorAll('.question-options p').forEach(option => {
+                    option.innerHTML = option.textContent.replace(regex, '<span class="highlight">$1</span>');
+                });
+            });
+        }
+    });
+</script>
+{% endblock %}

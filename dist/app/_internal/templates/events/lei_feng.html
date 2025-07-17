@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="hero-container">
+    <div class="hero-header">
+        <img src="{{ url_for('static', filename='image/image10.jpg') }}" alt="雷锋" class="hero-image">
+        <h1>雷锋</h1>
+        <p class="hero-title">共产主义战士</p>
+    </div>
+    <div class="hero-content">
+        <section class="hero-section">
+            <h2>人物简介</h2>
+            <p>雷锋（1940年—1962年），原名雷正兴，湖南长沙人，中国人民解放军战士，全心全意为人民服务的榜样。</p>
+        </section>
+        <section class="hero-section">
+            <h2>历史贡献</h2>
+            <ul class="hero-contributions">
+                <li>全心全意为人民服务的榜样</li>
+                <li>在平凡岗位上做出不平凡贡献</li>
+                <li>其事迹和精神影响了几代中国人</li>
+            </ul>
+        </section>
+        <section class="hero-section">
+            <h2>历史意义</h2>
+            <p>雷锋精神成为社会主义道德建设的重要象征，体现了无私奉献和爱岗敬业的价值观。</p>
+        </section>
+    </div>
+</div>
+{% endblock %}

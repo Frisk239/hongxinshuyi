@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="hero-container">
+    <div class="hero-header">
+        <img src="{{ url_for('static', filename='image/image13.jpg') }}" alt="赵一曼" class="hero-image">
+        <h1>赵一曼</h1>
+        <p class="hero-title">抗日民族英雄</p>
+    </div>
+    <div class="hero-content">
+        <section class="hero-section">
+            <h2>人物简介</h2>
+            <p>赵一曼（1905年—1936年），原名李坤泰，四川宜宾人，中国共产党党员，著名抗日民族英雄。</p>
+        </section>
+        <section class="hero-section">
+            <h2>历史贡献</h2>
+            <ul class="hero-contributions">
+                <li>领导东北抗日联军开展游击战争</li>
+                <li>被捕后坚贞不屈，英勇就义</li>
+                <li>留下感人至深的遗书，彰显爱国情怀</li>
+            </ul>
+        </section>
+        <section class="hero-section">
+            <h2>历史意义</h2>
+            <p>赵一曼是中华民族抗日英雄的杰出代表，她的事迹展现了中华儿女抵御外侮的坚强意志。</p>
+        </section>
+    </div>
+</div>
+{% endblock %}

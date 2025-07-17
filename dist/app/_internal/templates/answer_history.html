@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}答题记录{% endblock %}
+
+{% block content %}
+<div class="questions-container">
+    <h2>我的答题记录</h2>
+    <div class="questions-list">
+        {% for record in records %}
+        <div class="question-card">
+            <div class="question-header">
+                <h3>{{ record.question_text }}</h3>
+            </div>
+            <div class="question-options">
+                <p>A. {{ record.option_a }}</p>
+                <p>B. {{ record.option_b }}</p>
+                <p>C. {{ record.option_c }}</p>
+                <p>D. {{ record.option_d }}</p>
+            </div>
+            <div class="question-answer">
+                <span>你的答案: {{ record.user_answer }}</span>
+                <span>正确答案: {{ record.correct_answer }}</span>
+            </div>
+            <div class="actions"><button class="remove-btn" data-id="{{ record.id }}">删除记录</button></div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+document.querySelectorAll('.remove-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const recordId = this.getAttribute('data-id');
+        if(confirm('确定要删除这条记录吗？')) {
+            fetch(`/api/delete-record/${recordId}`, {
+                method: 'DELETE'
+            }).then(() => window.location.reload());
+        }
+    });
+});
+</script>
+{% endblock %}

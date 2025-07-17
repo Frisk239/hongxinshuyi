@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}个人中心{% endblock %}
+
+{% block head %}
+{{ super() }}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/user_center.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="user-center-container">
+    <div class="user-profile">
+        <div class="avatar-container">
+            <img src="/get-avatar" alt="用户头像" class="user-avatar">
+        </div>
+        <div class="user-info">
+            <h2>{{ session['username'] }}</h2>
+            <button id="change-avatar-btn" class="change-avatar-btn">修改头像</button>
+        </div>
+
+        <div class="user-stats">
+            <div class="stat-item">
+                <span class="stat-value">{{ total_answers }}</span>
+                <span class="stat-label">总答题数</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value">{{ correct_rate }}%</span>
+                <span class="stat-label">正确率</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value">{{ wrong_answers }}</span>
+                <span class="stat-label">错题数</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="user-actions">
+        <a href="{{ url_for('answer_history') }}" class="action-btn answer-history-btn">
+            <i class="fas fa-history"></i> 答题记录
+        </a>
+        <a href="{{ url_for('wrong_questions') }}" class="action-btn wrong-questions-btn">
+            <i class="fas fa-book"></i> 错题本
+        </a>
+        <a href="{{ url_for('change_password') }}" class="action-btn change-password-btn">
+            <i class="fas fa-key"></i> 修改密码
+        </a>
+        <a href="{{ url_for('delete_account_page') }}" class="action-btn delete-account-btn">
+            <i class="fas fa-user-times"></i> 注销账号
+        </a>
+        <a href="{{ url_for('logout') }}" class="action-btn logout-btn" onclick="return confirm('确定要退出登录吗？');">
+            <i class="fas fa-sign-out-alt"></i> 退出登录
+        </a>
+    </div>
+</div>
+
+<!-- 头像上传模态框 -->
+<div id="avatar-modal" class="avatar-modal">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h3>上传新头像</h3>
+        <form id="avatar-upload-form" enctype="multipart/form-data">
+            <input type="file" id="avatar-input" name="avatar" accept="image/*" required>
+            <button type="submit" class="upload-btn">上传头像</button>
+        </form>
+        <div id="upload-message" class="upload-message"></div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+    <script>
+// 确保页面加载时不自动触发弹窗
+document.addEventListener('DOMContentLoaded', function() {
+    // 头像上传模态框控制
+    const avatarModal = document.getElementById('avatar-modal');
+    const changeAvatarBtn = document.getElementById('change-avatar-btn');
+    const closeBtn = document.querySelector('.close-btn');
+    const avatarForm = document.getElementById('avatar-upload-form');
+    const uploadMessage = document.getElementById('upload-message');
+    const userAvatar = document.querySelector('.user-avatar');
+
+    // 打开模态框
+    changeAvatarBtn.addEventListener('click', function() {
+        avatarModal.style.display = 'flex';
+    });
+
+    // 关闭模态框
+    closeBtn.addEventListener('click', function() {
+        avatarModal.style.display = 'none';
+        uploadMessage.textContent = '';
+    });
+
+    // 点击模态框外部关闭
+    window.addEventListener('click', function(event) {
+        if (event.target === avatarModal) {
+            avatarModal.style.display = 'none';
+            uploadMessage.textContent = '';
+        }
+    });
+
+    // 表单提交处理
+    avatarForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(avatarForm);
+            
+
+            fetch('/upload-avatar', {
+                method: 'POST',
+                body: formData,
+                credentials: 'same-origin'
+            }).then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw err; });
+                }
+                return response.json();
+            }).then(data => {
+                if (data.success) {
+                    uploadMessage.textContent = '头像上传成功！';
+                    uploadMessage.style.color = 'green';
+                    // 更新用户中心和导航栏头像
+                    userAvatar.src = '/get-avatar?' + new Date().getTime();
+                    const navAvatar = document.getElementById('avatar-img');
+                    if (navAvatar) {
+                        navAvatar.src = '/get-avatar?' + new Date().getTime();
+                    }
+                    // 2秒后关闭模态框
+                    setTimeout(() => {
+                        avatarModal.style.display = 'none';
+                        uploadMessage.textContent = '';
+                    }, 2000);
+                } else {
+                    uploadMessage.textContent = '上传失败：' + (data.error || '未知错误');
+                    uploadMessage.style.color = 'red';
+                }
+            }).catch(error => {
+                uploadMessage.textContent = error.error || '上传失败，请重试';
+                uploadMessage.style.color = 'red';
+            });
+    });
+
+    // 原有代码 - 移除了不存在的模态框引用
+    document.getElementById('logout-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        if (confirm('确定要退出登录吗？')) {
+            window.location.href = "{{ url_for('logout') }}";
+        }
+    });
+
+    document.getElementById('change-password-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        window.location.href = "{{ url_for('change_password') }}";
+    });
+
+    document.getElementById('delete-account-btn').addEventListener('click', function(e) {
+        e.preventDefault();
+        window.location.href = "{{ url_for('delete_account_page') }}";
+    });
+});
+</script>
+{% endblock %}

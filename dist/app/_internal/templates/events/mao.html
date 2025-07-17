@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}毛泽东{% endblock %}
+
+{% block content %}
+<div class="hero-container">
+    <div class="hero-header">
+        <img src="{{ url_for('static', filename='image/image1.png') }}" alt="毛泽东" class="hero-image">
+        <h1>毛泽东</h1>
+        <p class="hero-title">伟大的无产阶级革命家</p>
+    </div>
+
+    <div class="hero-content">
+        <section class="hero-section">
+            <h2>人物简介</h2>
+            <p>毛泽东同志是伟大的马克思主义者，是中国共产党、中国人民解放军和中华人民共和国的主要创立者之一。</p>
+        </section>
+
+        <section class="hero-section">
+            <h2>历史贡献</h2>
+            <ul class="hero-contributions">
+                <li>领导中国人民取得新民主主义革命胜利</li>
+                <li>创立毛泽东思想</li>
+                <li>建立中华人民共和国</li>
+            </ul>
+        </section>
+
+        <section class="hero-section">
+            <h2>历史意义</h2>
+            <p>毛泽东同志是伟大的马克思主义者，无产阶级革命家、战略家和理论家，中国共产党、中国人民解放军和中华人民共和国的主要创立者之一。</p>
+        </section>
+    </div>
+</div>
+{% endblock %}

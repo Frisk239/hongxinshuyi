@@ -1,0 +1,299 @@
+.avatar-modal {
+    display: none; /* 默认隐藏 */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 25px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+}
+
+.close-btn:hover {
+    color: #c12c2c;
+}
+
+#avatar-upload-form {
+    margin: 20px 0;
+}
+
+#avatar-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.upload-btn {
+    background-color: #c12c2c;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+}
+
+.upload-btn:hover {
+    background-color: #a82424;
+}
+
+.upload-message {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.change-avatar-btn {
+    background-color: #c12c2c;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.change-avatar-btn:hover {
+    background-color: #a82424;
+}
+
+.user-center-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    position: relative;
+    z-index: 1;
+    backdrop-filter: blur(5px);
+}
+
+.user-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.user-stats {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 20px 0 30px;
+    width: 100%;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.stat-item {
+    text-align: center;
+    padding: 15px;
+    background-color: white;
+    border-radius: 10px;
+    min-width: 100px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.stat-value {
+    display: block;
+    font-size: 28px;
+    font-weight: bold;
+    color: #c12c2c;
+    margin-bottom: 5px;
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover .stat-value {
+    transform: scale(1.1);
+    text-shadow: 0 2px 4px rgba(193, 44, 44, 0.2);
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.user-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #c12c2c;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(193, 44, 44, 0.2);
+    transition: all 0.3s ease;
+}
+
+.user-avatar:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(193, 44, 44, 0.3);
+}
+
+.user-info h2 {
+    margin: 0;
+    color: #333;
+    font-size: 28px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.user-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.user-actions .action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 30px 20px;
+    flex: 0 0 calc(33.333% - 20px);
+    min-width: 140px;
+    background: linear-gradient(135deg, #f9f9f9, #f0f0f0);
+    color: #333;
+    text-decoration: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    font-size: 16px;
+    font-weight: 600;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.07);
+    position: relative;
+    overflow: hidden;
+}
+
+.user-actions .action-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 4px;
+    background-color: #c12c2c;
+    transition: left 0.3s ease;
+}
+
+.user-actions .action-btn:hover::before {
+    left: 0;
+}
+
+.user-actions .action-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+.user-actions .answer-history-btn:hover {
+    background: linear-gradient(135deg, #ffe6e6, #ffc2c2);
+}
+
+.user-actions .wrong-questions-btn:hover {
+    background: linear-gradient(135deg, #ffebe0, #ffccb3);
+}
+
+.user-actions .change-password-btn:hover {
+    background: linear-gradient(135deg, #e6ffe6, #b3ffcc);
+}
+
+.user-actions .delete-account-btn:hover {
+    background: linear-gradient(135deg, #ffe6f2, #ffcce6);
+}
+
+.user-actions .logout-btn:hover {
+    background: linear-gradient(135deg, #ffd9d9, #ff9999);
+}
+
+.user-actions .action-btn i {
+    font-size: 32px;
+    width: auto;
+    text-align: center;
+    color: #c12c2c;
+    transition: all 0.3s ease;
+}
+
+.user-actions .action-btn:hover i {
+    transform: scale(1.2);
+}
+
+.user-actions .answer-history-btn {
+    background: linear-gradient(135deg, #fff0f0, #ffd9d9);
+}
+
+.user-actions .wrong-questions-btn {
+    background: linear-gradient(135deg, #fff5f0, #ffe0cc);
+}
+
+.user-actions .change-password-btn {
+    background: linear-gradient(135deg, #f0fff4, #ccffe0);
+}
+
+.user-actions .delete-account-btn {
+    background: linear-gradient(135deg, #fff0f5, #ffd9ec);
+}
+
+.user-actions .logout-btn {
+    background: linear-gradient(135deg, #ffe6e6, #ffb3b3);
+    color: #c12c2c;
+    flex: 0 0 calc(66.666% - 20px);
+    margin-top: 10px;
+}
+
+.user-info {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .user-actions .action-btn {
+        flex: 0 0 calc(50% - 20px);
+    }
+    
+    .user-actions .logout-btn {
+        flex: 0 0 calc(100% - 20px);
+    }
+    
+    .user-stats {
+        gap: 15px;
+    }
+    
+    .stat-value {
+        font-size: 20px;
+    }
+}

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="hero-container">
+    <div class="hero-header">
+        <img src="{{ url_for('static', filename='image/image7.jpg') }}" alt="董存瑞" class="hero-image">
+        <h1>董存瑞</h1>
+        <p class="hero-title">战斗英雄</p>
+    </div>
+    <div class="hero-content">
+        <section class="hero-section">
+            <h2>人物简介</h2>
+            <p>董存瑞（1929年—1948年），河北省怀来县人，中国人民解放军著名战斗英雄。</p>
+        </section>
+        <section class="hero-section">
+            <h2>历史贡献</h2>
+            <ul class="hero-contributions">
+                <li>舍身炸碉堡，为部队开辟道路</li>
+                <li>在隆化战斗中英勇牺牲</li>
+                <li>被追认为中国共产党党员，追授战斗英雄称号</li>
+            </ul>
+        </section>
+        <section class="hero-section">
+            <h2>历史意义</h2>
+            <p>董存瑞的英雄事迹展现了革命战士的无畏精神和坚定信念，成为中华民族宝贵的精神财富。</p>
+        </section>
+    </div>
+</div>
+{% endblock %}

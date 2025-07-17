@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}错题本{% endblock %}
+
+{% block content %}
+<div class="questions-container">
+    <h2>我的错题本</h2>
+    <div class="questions-list">
+        {% for question in wrong_questions %}
+        <div class="question-card">
+            <div class="question-header">
+                <h3>{{ question.question_text }}</h3>
+            </div>
+            <div class="question-options">
+                <p>A. {{ question.option_a }}</p>
+                <p>B. {{ question.option_b }}</p>
+                <p>C. {{ question.option_c }}</p>
+                <p>D. {{ question.option_d }}</p>
+            </div>
+            <div class="actions">
+                <a href="/answer?question_id={{ question.id }}" class="practice-btn">重新练习</a>
+                <button class="remove-btn" data-id="{{ question.id }}">移出错题本</button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+document.querySelectorAll('.remove-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const questionId = this.getAttribute('data-id');
+        if(confirm('确定要将此题移出错题本吗？')) {
+            fetch(`/api/remove-wrong-question/${questionId}`, {
+                method: 'DELETE'
+            }).then(() => window.location.reload());
+        }
+    });
+});
+</script>
+{% endblock %}
