@@ -1,9 +1,6 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session, g
 import sqlite3
 import os
-import dotenv
-from dotenv import load_dotenv
-load_dotenv()  # 加载.env文件中的环境变量
 from openai import OpenAI
 app = Flask(__name__)
 app.secret_key = 'your-secret-key-here'  # 生产环境应使用更安全的随机字符串
@@ -698,25 +695,61 @@ def api_chat():
 
     try:
         # 初始化 DeepSeek 客户端
+        api_key = os.environ.get("DEEPSEEK_API_KEY")
+        if not api_key:
+            print("错误: 未找到DEEPSEEK_API_KEY环境变量")
+            return jsonify({'error': '未配置DEEPSEEK_API_KEY环境变量'}), 500
+            
+        print(f"使用API Key: {api_key[:4]}...{api_key[-4:]}")
+        
         client = OpenAI(
-            api_key=os.getenv("DEEPSEEK_API_KEY"),
-            base_url="https://api.deepseek.com/v1/chat/completions"
+            api_key=api_key,
+            base_url="https://api.deepseek.com/v1"
         )
 
+        print(f"发送请求到DeepSeek API，问题: {question}")
+        
         # 调用API
-        response = client.chat.completions.create(
-            model="deepseek-chat",
-            messages=[
+        headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "model": "deepseek-chat",
+            "messages": [
                 {"role": "system", "content": "你是一个红色文化知识问答助手"},
                 {"role": "user", "content": question}
-            ]
-        )
+            ],
+            "temperature": 0.7,
+            "max_tokens": 2000
+        }
+        print(f"请求参数: {payload}")
+        
+        try:
+            response = client.chat.completions.create(**payload)
+            print(f"原始响应: {response}")
+        except Exception as e:
+            print(f"API调用异常: {str(e)}")
+            raise
+        
+        if not response.choices:
+            raise ValueError("API返回空响应")
+        
+        print(f"收到API响应: {response}")
+        
         answer = response.choices[0].message.content
         return jsonify({'answer': answer})
 
     except Exception as e:
-        print(f"API调用失败: {str(e)}")
-        return jsonify({'error': 'AI服务暂时不可用', 'details': str(e)}), 500
+        error_msg = f"API调用失败: {str(e)}"
+        print(error_msg)
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'error': '抱歉，无法获取回答',
+            'details': error_msg,
+            'solution': '请检查API Key是否正确或联系管理员'
+        }), 500
 
 @app.route('/api/check-login')
 def check_login():
